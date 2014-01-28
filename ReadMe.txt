@@ -1,0 +1,1 @@
+This branch will stores the most recent stable exe for Lies and Disguise, as well as project files and a todo list
