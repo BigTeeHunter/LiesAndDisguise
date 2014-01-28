@@ -87,6 +87,7 @@
       <sprite>sprites\sprStartGame</sprite>
       <sprite>sprites\sprShowIP</sprite>
       <sprite>sprites\sprReadyUp</sprite>
+      <sprite>sprites\sprInfo</sprite>
     </sprites>
     <sprites name="Main Menu">
       <sprite>sprites\sprStartServer</sprite>
@@ -137,6 +138,7 @@
       <object>objects\objServerPlayerList</object>
       <object>objects\btnReadyUp</object>
       <object>objects\btnRefreshLobby</object>
+      <object>objects\objInfo</object>
     </objects>
     <objects name="Main Menu">
       <object>objects\objMainMenuController</object>
