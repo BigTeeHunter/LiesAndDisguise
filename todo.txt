@@ -1,0 +1,23 @@
+// - needs testing
+-> - TODO
+
+
+//max players (if someone extra joins)
+
+->client leaves(timeout on serverside)
+
+->show IP
+
+->get stuck in corner
+
+//Dead animations
+
+//keep movin when dead
+
+//fix broadcast (shut down)
+
+//spectate
+
+//mute
+
+->save profile data to ini
