@@ -26,7 +26,7 @@
           <argument>
             <kind>1</kind>
             <string>///setup server depending if you are host or client
-
+global.tick=0;
 // Create a buffer for the network messages
 buff = buffer_create(2048, buffer_grow, 1);
 
@@ -82,16 +82,25 @@ client = network_create_socket(global.ServerType);
 global.client = client;
 
 // Connect to our server
-var err = network_connect(client, global.connectip, PORT_PLAY);
-if( err!=0 ){
+var err = network_connect_raw(client, global.connectip, PORT_PLAY);
+if( err&lt;0 ){
     // if we can't connect, show and error and restart... could be more graceful :)
     show_message("Error - can not connect to server!!");
     instance_destroy();
     game_restart();
     exit;
-}else{
 }
-
+else 
+{
+    var err = network_connect(client, global.connectip, PORT_PLAY);
+    if( err&lt;0 ){
+        // if we can't connect, show and error and restart... could be more graceful :)
+        show_message("Error - can not connect to server!!");
+        instance_destroy();
+        game_restart();
+        exit;
+    }
+}
 //now that our client has connected we can send the clients name
 sendLobbyPacket();
 }
@@ -125,6 +134,58 @@ sendLobbyPacket();
 }
 buffer_delete(buff);
 global.haveServer = false;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="2">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>SendGameOver(1);
+with(objBlood)instance_destroy();
+global.gameState=CMD_LOBBY;
+room_goto(TraitorWin);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="1">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>SendGameOver(0);
+with(objBlood)instance_destroy();
+global.gameState=CMD_LOBBY;
+room_goto(TraitorLose);
 </string>
           </argument>
         </arguments>
@@ -187,8 +248,9 @@ alarm[0]=room_speed;
             <kind>1</kind>
             <string>///Send Data to clients (lobby and game)
 
-if(global.haveServer &amp;&amp; global.gameState==CMD_LOBBY)
+if(global.haveServer &amp;&amp; global.gameState==CMD_LOBBY &amp;&amp; global.tick++==1)
 {
+    global.tick=0;
     count = ds_list_size(socketlist);
     global.playerTotal=count;
 
@@ -261,24 +323,16 @@ if(global.haveServer &amp;&amp; global.gameState==CMD_GAME){
             //Check for end of game
             if(tId.mAmITheTraitor &amp;&amp; tId.mHealth&lt;=0)//tator lost.
             {
-                SendGameOver(0);
-                with(objBlood)instance_destroy();
-                global.gameState=CMD_LOBBY;
-                room_goto(TraitorLose);
-                exit;
+                if(alarm[1]&lt;0)alarm[1]=room_speed;
             }
             else if(tId.mHealth&lt;=0)//this guy is dead.
             {
                 numDead++;
             }
         }
-        if(numDead==global.playerTotal-1 &amp;&amp; numDead!=0)//tator won
+        if(numDead==global.playerTotal-1 &amp;&amp; numDead!=0 &amp;&amp; alarm[1]&lt;0)//tator won
         {
-            SendGameOver(1);
-            with(objBlood)instance_destroy();
-            global.gameState=CMD_LOBBY;
-            room_goto(TraitorWin);
-            exit;
+            if(alarm[2]&lt;0)alarm[2]=room_speed;
         }
         
         //send out what ther server knowes each step!

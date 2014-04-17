@@ -170,6 +170,8 @@ if(sprite_index==sprFatalFront || sprite_index==sprFatalBack)
         image_speed=0;
 }
 
+if(global.haveServer)
+{
 //This is the most horriblist code evar, but it works. . . for now. 
 if((position_meeting(x,y+(sprite_height/2), objHouse) || position_meeting(x+(sprite_width/5),y+(sprite_height/2), objHouse) ||  position_meeting(x-(sprite_width/5),y+(sprite_height/2), objHouse)) &amp;&amp; mJumpSpeed&gt;=0) // then a jump has just started
 {   
@@ -196,7 +198,7 @@ else
     else
         mJumpSpeed ++;
 }
-
+}
 //If the player is currently attacking
 if(!mCanAttack)
 {
@@ -219,6 +221,114 @@ if(!mCanAttack)
 
 
 
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="5" enumb="87">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (mHealth&lt;=0 &amp;&amp; objPlayer.id==id)
+{   //if this player is dead and if this player is me, allow spectate (local no server)
+    view_object=noone;
+    view_yview[0]-=PlayerSpeed;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="5" enumb="83">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (mHealth &lt;=0 &amp;&amp; objPlayer.id==id)
+{   //if this player is dead and if this player is me, allow spectate (local no server)
+    view_object=noone;
+    view_yview[0]+=PlayerSpeed;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="5" enumb="68">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (mHealth&lt;=0 &amp;&amp; objPlayer.id==id)
+{   //if this player is dead and if this player is me, allow spectate (local no server)
+    view_object=noone;
+    view_xview[0]+=PlayerSpeed;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="5" enumb="65">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (mHealth&lt;=0 &amp;&amp; objPlayer.id==id)
+{   //if this player is dead and if this player is me, allow spectate (local no server)
+    view_object=noone;
+    view_xview[0]-=PlayerSpeed;
+}
 </string>
           </argument>
         </arguments>
@@ -520,46 +630,19 @@ if(mCanAttack &amp;&amp; position_meeting(x,y+(sprite_height/2)+CONST_INCREMENT,
     alarm[0]=room_speed;
     
     //collect collision object
-    if(mCurrentWeapon == KNIFE &amp;&amp; !mFacingRight)
-    {  
-        var x1 = x;
-        var y1 = y;
-        var x2 = x + (sprite_width/2) + 20;
-        var y2 = y + (sprite_height/2);
-          
-        var coll = collision_rectangle(x1, y1, x2, y2, objPlayer, false, true);
-    }
-    else if(mCurrentWeapon == KNIFE &amp;&amp; mFacingRight)
-    {  
-        var x1 = x;
-        var y1 = y;
-        var x2 = x + (sprite_width/2) +- 20;
-        var y2 = y + (sprite_height/2);
-          
-        var coll = collision_rectangle(x1, y1, x2, y2, objPlayer, false, true);
-    }
-   
-            
-    if(mCurrentWeapon == AXE &amp;&amp; !mFacingRight)
+
+    var x1 = x;
+    var y2 = y;
+    var y1 = y - (sprite_height/2);
+    var x2 = x + (sprite_width/2) + sprite_width/4;
+    if(mCurrentWeapon==AXE) x2+=sprite_width/4;
+    if(x2&lt;x1)
     {
-        var x1 = x;
-        var y1 = y ;
-        var x2 = x + (sprite_width/2)+40;
-        var y2 = y + (sprite_height/2);
-        
-        var coll = collision_rectangle(x1, y1, x2, y2, objPlayer, false, true);
+        var temp = x2;
+        x2=x1;
+        x1=temp;
     }
-    else if(mCurrentWeapon == AXE &amp;&amp; mFacingRight)
-    {
-        var x1 = x;
-        var y1 = y ;
-        var x2 = x + (sprite_width/2)-40;
-        var y2 = y + (sprite_height/2);
-        
-        var coll = collision_rectangle(x1, y1, x2, y2, objPlayer, false, true);
-    }
-    
-    
+    var coll = collision_rectangle(x1, y1, x2, y2, objPlayer, false, true);       
 
     //if colliding, do stuff to the player being hit
     if(coll != noone &amp;&amp; coll != id &amp;&amp; coll.mHealth&gt;0)
@@ -568,7 +651,6 @@ if(mCanAttack &amp;&amp; position_meeting(x,y+(sprite_height/2)+CONST_INCREMENT,
         {
             if(other.mFacingRight == mFacingRight)
             {
-                
                 mHealth -=2;
                 if(mHealth &gt; 0)
                 {
@@ -586,6 +668,7 @@ if(mCanAttack &amp;&amp; position_meeting(x,y+(sprite_height/2)+CONST_INCREMENT,
             if(other.mFacingRight != mFacingRight)
             {
                 mHealth -=1;
+                if(other.mCurrentWeapon==AXE)mHealth-=1;
                 if(mHealth &gt; 0)
                 {
                     sprite_index = sprDamageFront;
@@ -897,11 +980,7 @@ if(mHealth&gt;0)
     else if(id=instance_find(objPlayer,0))
         global.Keys[0,KEY_W]=true;
 }
-else if (objPlayer.id==id)
-{   //if this player is dead and if this player is me, allow spectate (local no server)
-    view_object=noone;
-    view_yview[0]-=PlayerSpeed;
-}
+
 </string>
           </argument>
         </arguments>
@@ -934,11 +1013,7 @@ if(mHealth&gt;0)
     else if(id=instance_find(objPlayer,0))
         global.Keys[0,KEY_S]=true;
 }
-else if (objPlayer.id==id)
-{   //if this player is dead and if this player is me, allow spectate (local no server)
-    view_object=noone;
-    view_yview[0]+=PlayerSpeed;
-}
+
 </string>
           </argument>
         </arguments>
@@ -971,11 +1046,7 @@ if(mHealth&gt;0)
     else if(id=instance_find(objPlayer,0))
         global.Keys[0,KEY_D]=true;
 }
-else if (objPlayer.id==id)
-{   //if this player is dead and if this player is me, allow spectate (local no server)
-    view_object=noone;
-    view_xview[0]+=PlayerSpeed;
-}
+
 </string>
           </argument>
         </arguments>
@@ -1010,11 +1081,7 @@ if(mHealth&gt;0)
         global.Keys[0,KEY_A]=true;
         //event_user(KEY_A);
 }
-else if (objPlayer.id==id)
-{   //if this player is dead and if this player is me, allow spectate (local no server)
-    view_object=noone;
-    view_xview[0]-=PlayerSpeed;
-}
+
 </string>
           </argument>
         </arguments>

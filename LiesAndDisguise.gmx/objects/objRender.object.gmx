@@ -40,7 +40,7 @@ var myId=objPlayer.id;
 
 if(surface_exists(global.Surface)&amp;&amp;surface_exists(global.SurfaceActive))
 {
-    if(global.traitor || objPlayer.mHealth&lt;=0)
+    if(global.traitor || objPlayer.mHealth&lt;=0 || true)
     {
         draw_set_blend_mode(bm_normal);
         draw_surface(global.Surface,view_xview[0],view_yview[0]);

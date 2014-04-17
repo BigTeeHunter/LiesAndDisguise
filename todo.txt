@@ -10,14 +10,6 @@
 
 ->get stuck in corner
 
-//Dead animations
-
-//keep movin when dead
-
-//fix broadcast (shut down)
-
-//spectate
-
-//mute
-
 ->save profile data to ini
+
+->Cant rejoin server after game, broadcast listener/server not restarted properly?
